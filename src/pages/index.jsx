@@ -20,6 +20,7 @@ export async function getServeSideProps() {
 }
 */
 import Image from 'next/image';
+import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { api } from "../services/api";
@@ -44,7 +45,9 @@ const Home = (props) => {
                   objectFit='cover'
                 />
                 <div className={styles.episodeDetails}>
-                  <a href="">{episode.title}</a>
+                  <Link href={`/episodes/${episode.id}`}>
+                    <a>{episode.title}</a>
+                  </Link>
                   <p>{episode.members}</p>
                   <span>{episode.publishedAt}</span>
                   <span>{episode.durationAsString}</span>
@@ -61,18 +64,20 @@ const Home = (props) => {
         <h2>Todos epsódios</h2>
         <table cellSpacing={0}>
           <thead>
-            <th></th>
-            <th>Podcast</th>
-            <th>Integrantes</th>
-            <th>Data</th>
-            <th>Duração</th>
-            <th></th>
+            <tr>
+              <th></th>
+              <th>Podcast</th>
+              <th>Integrantes</th>
+              <th>Data</th>
+              <th>Duração</th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
             {allEpisodes.map(eps => {
-              return(
+              return (
                 <tr key={eps.id}>
-                  <td>
+                  <td style={{ width: 72 }}>
                     <Image
                       width={120}
                       height={120}
@@ -82,14 +87,18 @@ const Home = (props) => {
                     />
                   </td>
                   <td>
-                    <a href="">{eps.title}</a>
+                    <Link href={`/episodes/${eps.id}`}>
+                      <a>{eps.title}</a>
+                    </Link>
                   </td>
                   <td>{eps.members}</td>
-                  <td>{eps.publishedAt}</td>
+                  <td style={{ width: 100 }}>
+                    {eps.publishedAt}
+                  </td>
                   <td>{eps.durationAsString}</td>
                   <td>
                     <button type="button">
-                      <img src="/play-green.svg" alt="Tocar episódio"/>
+                      <img src="/play-green.svg" alt="Tocar episódio" />
                     </button>
                   </td>
                 </tr>
@@ -120,7 +129,6 @@ export const getStaticProps = async () => {
       publishedAt: format(parseISO(episode.published_at), 'd MMM yy', { locale: ptBR }),
       duration: Number(episode.file.duration),
       durationAsString: convertDurationToTimeString(Number(episode.file.duration)),
-      description: episode.description,
       url: episode.file.url,
     }
   });
