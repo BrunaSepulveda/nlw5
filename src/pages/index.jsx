@@ -27,7 +27,12 @@ import { api } from "../services/api";
 import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
 
 import styles from './home.module.scss';
+import { useContext } from 'react';
+import { PlayerContext } from '../contexts/PlayerContext';
+
+
 const Home = (props) => {
+  const { play } = useContext(PlayerContext);
   const { latestEpisodes, allEpisodes } = props;
   return (
     <div className={styles.homepage}>
@@ -52,7 +57,10 @@ const Home = (props) => {
                   <span>{episode.publishedAt}</span>
                   <span>{episode.durationAsString}</span>
                 </div>
-                <button type='button'>
+                <button 
+                  type='button'
+                  onClick={() => play(episode)}
+                >
                   <img src="/play-green.svg" alt="Tocar episódio" />
                 </button>
               </li>
@@ -74,30 +82,33 @@ const Home = (props) => {
             </tr>
           </thead>
           <tbody>
-            {allEpisodes.map(eps => {
+            {allEpisodes.map(episode => {
               return (
-                <tr key={eps.id}>
+                <tr key={episode.id}>
                   <td style={{ width: 72 }}>
                     <Image
                       width={120}
                       height={120}
-                      src={eps.thumbnail}
-                      alt={eps.title}
+                      src={episode.thumbnail}
+                      alt={episode.title}
                       objectFit='cover'
                     />
                   </td>
                   <td>
-                    <Link href={`/episodes/${eps.id}`}>
-                      <a>{eps.title}</a>
+                    <Link href={`/episodes/${episode.id}`}>
+                      <a>{episode.title}</a>
                     </Link>
                   </td>
-                  <td>{eps.members}</td>
+                  <td>{episode.members}</td>
                   <td style={{ width: 100 }}>
-                    {eps.publishedAt}
+                    {episode.publishedAt}
                   </td>
-                  <td>{eps.durationAsString}</td>
+                  <td>{episode.durationAsString}</td>
                   <td>
-                    <button type="button">
+                    <button 
+                      type="button"
+                      onClick={() => play(episode)}
+                    >
                       <img src="/play-green.svg" alt="Tocar episódio" />
                     </button>
                   </td>
